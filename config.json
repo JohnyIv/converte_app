@@ -1,0 +1,13 @@
+{"siteTitle": "Converter app",
+"mainPage": "converter",
+"pages": {
+"converter": {
+"title": "Конвертер",
+"menu": "converter"
+},
+"currency": {
+"title": "Курс валюты",
+"menu": "currency"
+}
+}
+}
