@@ -1,9 +1,7 @@
 var app = (function() {
 
-        var config = {
+        var config = {};
 
-
-        };
             console.log(config);
         var ui = {
             body: document.querySelector('body'),
@@ -11,8 +9,26 @@ var app = (function() {
             pageTitle: document.querySelector('#page-title'),
             content: document.querySelector('#content')
         };
+        
+        
+
+        var valute = {
+            EUR: "",
+            USD: "",
+            CNY: ""
+        }
+        
+        fetch("https://www.cbr-xml-daily.ru/daily_json.js")
+            .then(response => response.json())
+            .then(data => {
+            valute.EUR = data.Valute.EUR.Value
+            valute.USD = data.Valute.USD.Value
+            valute.CNY = data.Valute.CNY.Value})
+
+
 
         function _loadPage(page) {
+            
             console.log(page)
             var url = "/" + page + '.html',
                 pageTitle = config.pages[page].title,
@@ -36,9 +52,45 @@ var app = (function() {
                     ui.pageTitle.textContent = pageTitle;
 
                     ui.content.innerHTML = text;
-                });
-            });
+                    if(url == "/currency.html"){
+                        coockyCheck()
+                        var EURviuw = content.querySelector('.eur')
+                        var USDviuw = content.querySelector('.usd')
+                        var CNYviuw = content.querySelector('.cny')
+                        EURviuw.textContent = valute.EUR
+                        USDviuw.textContent = valute.USD
+                        CNYviuw.textContent = valute.CNY
+                        
+                        function toTop () {
+                            let btns = content.querySelector('.valute')
 
+                            btns.addEventListener('click', function(e) {
+                                if(e.target.getAttribute("class") === "btn-cny") {
+                                    console.log(e.target.parentNode) 
+                                    let change = e.target.parentNode
+                                    btns.prepend(change)
+                                    document.cookie = "top=cny; max-age=43200"
+                                }else if(e.target.getAttribute("class") === "btn-usd") {
+                                    console.log(e.target.parentNode) 
+                                    let change = e.target.parentNode
+                                    btns.prepend(change)
+                                    document.cookie = "top=usd; max-age=43200"
+                                }else if(e.target.getAttribute("class") === "btn-eur") {
+                                    console.log(e.target.parentNode) 
+                                    let change = e.target.parentNode
+                                    btns.prepend(change)
+                                    document.cookie = "top=eur; max-age=43200"
+                                }
+                            })
+                                    
+                                
+                        }
+                        toTop ()
+                    }
+                });
+                
+            });
+            
         }
 
         // Клик по ссылке
@@ -82,7 +134,7 @@ var app = (function() {
 
         // Инициализация приложения
         function init() {
-            fetch('./config.json')
+            fetch('/config.json')
 
                 .then((response) => {
                     return response.json()
@@ -110,9 +162,25 @@ var app = (function() {
 
     //
         function coockyCheck() {
-            document.cookie = "top=0; expires=01/01/2025;";
-
-
+            
+            console.log(document.cookie)
+            // function getCookie(name) {
+            //     let matches = document.cookie.match(new RegExp(
+            //       "(?:^|; )" + name.replace(/([\.$?*|{}\(\)\[\]\\\/\+^])/g, '\\$1') + "=([^;]*)"
+            //     ));
+            //     return matches ? decodeURIComponent(matches[1]) : undefined;
+            //   }
+            let wrapper = content.querySelector('.valute')
+            if (content.querySelector('.valute') && document.cookie.split(';').filter((item) => item.includes('top=cny')).length) {
+                let changeCoocky = content.querySelector('.cny-item')
+                wrapper.prepend(changeCoocky)
+            }else if (content.querySelector('.valute') && document.cookie.split(';').filter((item) => item.includes('top=usd')).length) {
+                let changeCoocky = content.querySelector('.usd-item')
+                wrapper.prepend(changeCoocky)
+            }else if (content.querySelector('.valute') && document.cookie.split(';').filter((item) => item.includes('top=eur')).length) {
+                let changeCoocky = content.querySelector('.eur-item')
+                wrapper.prepend(changeCoocky)
+            }
         }
     // function getCookie(name) {
     //     let matches = document.cookie.match(new RegExp(
