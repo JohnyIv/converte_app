@@ -222,18 +222,18 @@ var app = (function() {
     console.log(document.cookie)
 
         function converter (){
-            let inputSumm = document.querySelector('.input-summ')
-            let convertValute = document.querySelector('.summ-to-valute')
-            inputSumm.addEventListener('change',(e) => {
-                e.stopPropagation();
-                if(!Number.isInteger(+inputSumm.value)){
-                    convertValute.textContent = "Вы ввели не чмсло"
-                }else if (inputSumm.value === "") {
-                    convertValute.textContent = 0
-                }else {
-                    convertValute.textContent = Math.round(+inputSumm.value * changeToValute) + " Руб"
-                }
-            })
+            // let inputSumm = document.querySelector('.input-summ')
+            // let convertValute = document.querySelector('.summ-to-valute')
+            // inputSumm.addEventListener('change',(e) => {
+            //     e.stopPropagation();
+            //     if(!Number.isInteger(+inputSumm.value)){
+            //         convertValute.textContent = "Вы ввели не чмсло"
+            //     }else if (inputSumm.value === "") {
+            //         convertValute.textContent = 0
+            //     }else {
+            //         convertValute.textContent = Math.round(+inputSumm.value * changeToValute) + " Руб"
+            //     }
+            // })
 
 
             // const EURviuw = document.querySelector('.eur')

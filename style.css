@@ -1,6 +1,45 @@
-.valute {
+body {
+    font-family: sans-serif;
+    text-align: center;
+    color: #000000;
+}
+
+.menu {
+    text-align: center;
+    font-size: 25px;
+    
+    
+}
+
+.menu a {
+    text-decoration: none;
+}
+.convert{
+    position: relative;
+}
+
+.visible{
     display: block;
 }
+
+.non-visible{
+    display: none;
+}
+
+.valute {
+    display: block;
+    width: 20%;
+    margin: 0 auto;
+}
+.valute-item {
+    display: flex;
+    justify-content: space-between;
+}
+
+.valute p {
+    width: fit-content;
+}
+
 .active {
     border: 1px solid red;
     color: red;
