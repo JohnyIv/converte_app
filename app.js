@@ -17,7 +17,8 @@ var app = (function() {
             USD: "",
             CNY: ""
         }
-        
+        let changeToValute = valute.USD
+
         fetch("https://www.cbr-xml-daily.ru/daily_json.js")
             .then(response => response.json())
             .then(data => {
@@ -45,7 +46,9 @@ var app = (function() {
             fetch(url).then(function(response) {
 
                 document.title = pageTitle + ' | ' + config.siteTitle;
-                ui.menu.querySelector(".active").classList.remove('active');
+                if(ui.menu.contains(ui.menu.querySelector('.active'))){
+                    ui.menu.querySelector(".active").classList.remove('active');
+                }
                 ui.menu.querySelector('a[data-menu="' + menu + '"]').classList.add('active');
 
                 response.text().then(function(text) {
@@ -54,17 +57,18 @@ var app = (function() {
                     ui.content.innerHTML = text;
                     if(url == "/currency.html"){
                         coockyCheck()
-                        var EURviuw = content.querySelector('.eur')
-                        var USDviuw = content.querySelector('.usd')
-                        var CNYviuw = content.querySelector('.cny')
+                        var EURviuw = document.querySelector('.eur')
+                        var USDviuw = document.querySelector('.usd')
+                        var CNYviuw = document.querySelector('.cny')
                         EURviuw.textContent = valute.EUR
                         USDviuw.textContent = valute.USD
                         CNYviuw.textContent = valute.CNY
                         
                         function toTop () {
-                            let btns = content.querySelector('.valute')
+                            var btns = document.querySelector('.valute')
 
                             btns.addEventListener('click', function(e) {
+                                e.stopPropagation();
                                 if(e.target.getAttribute("class") === "btn-cny") {
                                     console.log(e.target.parentNode) 
                                     let change = e.target.parentNode
@@ -86,6 +90,30 @@ var app = (function() {
                                 
                         }
                         toTop ()
+                    }else if(url =="/converter.html"){
+                        console.log("/converter.html")
+                        
+                        var changeToBtn = document.querySelector(".block-change-to")
+                        changeToValute = valute.USD
+                        converter()
+                        changeToBtn.addEventListener('click', function(e) {
+                            e.stopPropagation();
+                            if(e.target.classList.contains(".eur")){
+                                changeToValute = valute.EUR
+                                console.log(e.target)
+                                console.log(changeToValute)
+                            }else if(e.target.getAttribute("class") === "cny"){
+                                changeToValute = valute.CNY
+                                console.log(e.target)
+                                console.log(changeToValute)
+                            }else if(e.target.getAttribute("class") === "usd"){
+
+                                changeToValute = valute.USD
+                                console.log(e.target)
+                                console.log(changeToValute)
+                            }
+                        })
+                        
                     }
                 });
                 
@@ -170,15 +198,18 @@ var app = (function() {
             //     ));
             //     return matches ? decodeURIComponent(matches[1]) : undefined;
             //   }
-            let wrapper = content.querySelector('.valute')
-            if (content.querySelector('.valute') && document.cookie.split(';').filter((item) => item.includes('top=cny')).length) {
-                let changeCoocky = content.querySelector('.cny-item')
+            
+            if (document.querySelector('.valute') && document.cookie.split(';').filter((item) => item.includes('top=cny')).length) {
+                let changeCoocky = document.querySelector('.cny-item')
+                let wrapper = document.querySelector('.valute')
                 wrapper.prepend(changeCoocky)
-            }else if (content.querySelector('.valute') && document.cookie.split(';').filter((item) => item.includes('top=usd')).length) {
-                let changeCoocky = content.querySelector('.usd-item')
+            }else if (document.querySelector('.valute') && document.cookie.split(';').filter((item) => item.includes('top=usd')).length) {
+                let changeCoocky = document.querySelector('.usd-item')
+                let wrapper = document.querySelector('.valute')
                 wrapper.prepend(changeCoocky)
-            }else if (content.querySelector('.valute') && document.cookie.split(';').filter((item) => item.includes('top=eur')).length) {
-                let changeCoocky = content.querySelector('.eur-item')
+            }else if (document.querySelector('.valute') && document.cookie.split(';').filter((item) => item.includes('top=eur')).length) {
+                let changeCoocky = document.querySelector('.eur-item')
+                let wrapper = document.querySelector('.valute')
                 wrapper.prepend(changeCoocky)
             }
         }
@@ -189,6 +220,68 @@ var app = (function() {
     //     return matches ? decodeURIComponent(matches[1]) : undefined;
     // }
     console.log(document.cookie)
+
+        function converter (){
+            let inputSumm = document.querySelector('.input-summ')
+            let convertValute = document.querySelector('.summ-to-valute')
+            inputSumm.addEventListener('change',(e) => {
+                e.stopPropagation();
+                if(!Number.isInteger(+inputSumm.value)){
+                    convertValute.textContent = "Вы ввели не чмсло"
+                }else if (inputSumm.value === "") {
+                    convertValute.textContent = 0
+                }else {
+                    convertValute.textContent = Math.round(+inputSumm.value * changeToValute) + " Руб"
+                }
+            })
+
+
+            // const EURviuw = document.querySelector('.eur')
+            // const USDviuw = document.querySelector('.usd')
+            // const CHFviuw = document.querySelector('.chf')
+            const eurInRub = document.querySelector('.eur-in-rub')
+            const eurInput = document.querySelector('.eur-input')
+            const usdInRub = document.querySelector('.usd-in-rub')
+            const usdInput = document.querySelector('.usd-input')
+            const cnyInput = document.querySelector('.cny-input')
+            const cnyInRub = document.querySelector('.cny-in-rub')
+            
+            eurInput.addEventListener('change', () => {
+                if (!Number.isInteger(+eurInput.value)) {
+                    eurInRub.textContent = "Вы ввели не число"
+                } else if (eurInput.value === '') {
+                    eurInRub.textContent = 0
+                } else {
+                    eurInRub.textContent = Math.round(+eurInput.value * valute.EUR) + " Руб"
+                }
+            })
+            
+            usdInput.addEventListener('change', () => {
+                if (!Number.isInteger(+usdInput.value)) {
+                    usdInRub.textContent = "Вы ввели не число"
+                } else if (usdInput.value === '') {
+                    usdInRub.textContent = 0
+                } else {
+                    usdInRub.textContent = Math.round(+usdInput.value * valute.USD) + " Руб"
+                }
+            })
+
+            cnyInput.addEventListener('change', () => {
+                if (!Number.isInteger(+cnyInput.value)) {
+                    cnyInRub.textContent = "Вы ввели не число"
+                } else if (cnyInput.value === '') {
+                    cnyInRub.textContent = 0
+                } else {
+                    cnyInRub.textContent = Math.round(+cnyInput.value * valute.CNY) + " Руб"
+                }
+            })
+
+
+
+
+
+        }
+
     })();
 
 // Запуск приложения
